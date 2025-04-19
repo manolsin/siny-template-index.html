@@ -1,1 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NalSiny</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom, #ffb6c1, #ffe6f2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            overflow: auto;
+        }
+        .login-container {
+            width: 350px;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.4em;
+            color: #ff66b2;
+            margin-bottom: 20px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .login-container input:focus {
+            border-color: #ff66b2;
+            box-shadow: 0 0 5px rgba(255, 102, 178, 0.5);
+        }
+        .login-container button {
+            width: 100%;
+            background-color: #ff66b2;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Pacifico', cursive;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+        .login-container button:hover {
+            background-color: #ff3385;
+        }
+        .chat-container {
+            width: 90%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+            position: relative;
+            display: none;
+        }
+        .container {
+    display: none; /* Caché au début */
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
 
+        .heart {
+            font-size: 35px;
+            color: #ff66b2;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+        .chat-box {
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 50vh;
+            padding: 15px;
+            background-color: #fef5f9;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-box::-webkit-scrollbar-thumb {
+            background: #ff66b2;
+            border-radius: 10px;
+        }
+        .message {
+    display: flex;
+    align-items: center;
+    margin: 10px 0; /* Adjusted margin for spacing */
+    padding: 12px 18px;
+    border-radius: 20px;
+    max-width: 75%;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.user-message {
+    background-color: #ff66b2;
+    color: white;
+    align-self: flex-end; /* Align user messages to the right */
+    margin-left: auto; /* Ensure it stays on the right */
+}
+
+.bot-message {
+    background-color: #ffccd5;
+    align-self: flex-start; /* Align bot messages to the left */
+    margin-right: auto; /* Ensure it stays on the left */
+}
+
+
+        .message i {
+            margin-right: 12px;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .input-container input {
+            flex: 1;
+            padding: 15px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .input-container input:focus {
+            border-color: #ff66b2;
+            box-shadow: 0 0 10px rgba(255, 102, 178, 0.5);
+        }
+        .input-container button {
+            background-color: #ff66b2;
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .input-container button:hover {
+            background-color: #ff3385;
+            transform: scale(1.1);
+        }
+        .input-container button:active {
+            transform: scale(1);
+        }
+        .input-container button i {
+            font-size: 20px;
+        }
+        .chat-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 900px;
+    width: 100%;
+}
+.chat-container {
+    width: 90%;
+    height: 70vh;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex: 2;
+    height: 70vh;
+    position: relative;
+    display: block; /* Change this from 'none' to 'block' */
+}
+
+        .description {
+            flex: 1;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            color: #ff66b2;
+            line-height: 1.5;
+            text-align: left;
+        }
+        .description p {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #3b031f;
+            font-family: 'Helvetica', sans-serif;
+        }
+        .calendar {
+    margin-top: 10px auto;
+    text-align: center;
+    padding: 15px;
+    background: #ffccd5;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+    color: #b3005e;
+    width: 300px; /* Réduire la largeur */
+    padding: 10px; /* Réduire l'espace intérieur */
+    font-size: 14px; /* Réduire la taille de police */
+}
+
+.calendar-header {
+    font-size: 12px;
+    font-weight: bold;
+    background: #ff66b2;
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    font-size: 12px;
+    justify-content: center;
+}
+
+.calendar-grid div {
+    padding: 5px;
+    background: rgb(255, 255, 255);
+    border-radius: 5px;
+    
+}
+.special-date {
+    position: relative;
+    background: #ff66b2;
+    color: rgb(152, 40, 135);
+    font-weight: bold;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    animation: pulse 1.5s infinite alternate;
+    margin: auto; /* Centrer l'élément */
+}
+
+/* Ajouter un cœur au-dessus du 7 */
+.special-date::before {
+    content: "❤️";
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    animation: bounce 1s infinite alternate;
+}
+.counter {
+    font-size: 15px;
+    font-weight: bold;
+    color: #d81b60;
+    background: white;
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 8px;
+}
+
+/* Animation de pulsation */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Animation de rebond pour le cœur */
+@keyframes bounce {
+    0% { transform: translate(-50%, 0); }
+    100% { transform: translate(-50%, -5px); }
+}
+
+
+.calendar-note {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ff3385;
+    font-weight: bold;
+}
+.login-container, .chat-container, .description {
+    width: 90%;
+    max-width: 400px;
+}
+.login-container input, 
+.login-container button, 
+.input-container input {
+    font-size: 14px;
+    padding: 12px;
+}
+@media (max-width: 600px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .chat-container {
+        height: auto;
+        padding: 20px;
+    }
+
+    .description {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .calendar {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .calendar-grid {
+        font-size: 10px;
+    }
+}
+.chat-box {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+.input-container button i {
+    font-size: 20px;
+    color: white;
+}
+
+.login-container img {
+    width: 80%; /* Ajuste la taille en pourcentage */
+    max-width: 150px; /* Définit une taille maximale */
+    height: auto; /* Maintient les proportions */
+    display: block; /* S'assure que l'image est bien affichée */
+    margin: 10px auto; /* Centre l'image */
+}
+
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="login-container">
+        <h2>❤️ Log-In ❤️</h2>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button onclick="login()">Login</button>
+    </div>
+    <div class="container" id ="main-container">
+        <div class="description">
+            <p>❤️ Pour entendre ce que je pense de toi quand tu en ressens le besoin, tape <strong>heart</strong>.<br>
+            💌 Pour te rappeler combien je t'aimeee, tape <strong>rappel</strong>.<br>
+            ❤️ Pour rendre Manal heureuse, tape <strong>happy</strong>.<br>
+            💌 Pour lire un poème, tape <strong>poem</strong>.</p>
+            <div class="counter">💖 Depuis le 7 juin 2024 : <span id="day-counter"></span> jours 💖</div>
+
+            <script>
+                function updateCounter() {
+                    const startDate = new Date("2024-06-07");
+                    const today = new Date();
+                    const timeDiff = today - startDate;
+                    const dayCount = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                    document.getElementById("day-counter").textContent = dayCount;
+                }
+                updateCounter();
+            </script>
+            <div class="calendar">
+                <div class="calendar-header">Juin 2024</div>
+                <div class="calendar-grid">
+                    <div>Lu</div><div>Ma</div><div>Me</div><div>Je</div><div>Ve</div><div>Sa</div><div>Di</div>
+                    <div></div><div></div><div></div><div></div><div></div><div>1</div><div>2</div>
+                    <div>3</div><div>4</div><div>5</div><div>6</div>
+                    <div class="special-date">7</div>
+                    <div>8</div><div>9</div>
+                    <div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div>
+                    <div>17</div><div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23</div>
+                    <div>24</div><div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div>
+                    <div>31</div>
+                </div>
+                <p class="calendar-note">💖 Le début de notre amour 💖</p>
+            </div>
+        </div>
+        
+    <!-- Chat Page -->
+     
+    <div class="chat-container">
+        <div class="heart">❤️</div>
+        <div class="chat-box" id="chat-box">
+            <div class="message bot-message">
+                <i class="fas fa-robot"></i>
+                <span><strong>Your Nal:</strong> Coucou bébé, prêt pour discuter avec ton Nal Bot préféré ?</span>
+            </div>
+
+        </div>
+        
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Dis quelque chose..." />
+            <button onclick="sendMessage()"> 
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+            
+        </div>
+
+    </div>
+
+    <script>
+        function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (username === 'yassine' && password === 'ilovemanal') {
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('main-container').style.display = 'flex'; // Show both description and chat
+        document.getElementById('chat-box').style.display = 'block'; // Ensure chat is visible
+    } else {
+        alert('Invalid username or password!');
+    }
+}
+
+        function sendMessage() {
+            let userInput = document.getElementById('user-input').value;
+            if (userInput) {
+                let chatBox = document.getElementById('chat-box');
+                chatBox.innerHTML += `<div class="message user-message"><i class="fas fa-user"></i> <span><strong>Siny:</strong> ${userInput}</span></div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+                document.getElementById('user-input').value = '';
+                
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'user_input=' + encodeURIComponent(userInput)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    chatBox.innerHTML += `<div class="message bot-message"><i class="fas fa-robot"></i> <span><strong>Your Nal:</strong> ${data.response}</span></div>`;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
